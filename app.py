@@ -50,10 +50,10 @@ if user_input:
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # Appel à Groq (Llama 3)
+    # Appel à Groq (Version 2026 mise à jour)
     try:
         response = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT}
             ] + st.session_state.messages,
@@ -71,7 +71,7 @@ if user_input:
     except Exception as e:
         st.error(f"Oups, une erreur est survenue : {e}")
 
-# Bouton pour recommencer
+# Bouton pour recommencer dans la barre latérale
 if st.sidebar.button("Nouvelle conversation"):
     st.session_state.messages = []
     st.rerun()
