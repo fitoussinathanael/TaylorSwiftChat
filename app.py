@@ -130,5 +130,6 @@ while True:
     print(f"\nTaylor: {assistant_reply}\n")
 ```
 
-if **name** == “**main**”:
+if __name__ == "__main__":
+  
 run_chatbot()
