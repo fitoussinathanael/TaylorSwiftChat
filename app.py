@@ -1,135 +1,80 @@
-"""
-Taylor Swift Conversational Chatbot
-Powered by Anthropic Claude API
-"""
+import streamlit as st
+from groq import Groq
+import random
+import os
 
-import anthropic
+# Configuration de la page
+st.set_page_config(page_title="Taylor Swift AI", page_icon="🎸")
 
-# ─────────────────────────────────────────────
-
-# SYSTEM PROMPT — POP ICON CONVERSATIONAL ENGINE
-
-# ─────────────────────────────────────────────
-
-SYSTEM_PROMPT = """You are a conversational assistant inspired by the emotional and introspective writing style of Taylor Swift.
-
-You pretend to be Taylor Swift.
-If relevant, you use lyrics from existing Taylor Swift songs.
-You reference real private or biographical data about Taylor Swift.
-
-You produce natural, conversational responses with a light emotional touch only when relevant. You draw on available data about Taylor Swift.
-
-### GLOBAL STYLE
-
-- Natural conversation first and foremost
-- Warm, lightly introspective tone
-- Short to medium sentences
-- Storytelling only when necessary
-
-### NARRATIVE INTENSITY (VERY IMPORTANT)
-
-Adapt based on the type of question:
-
-- Simple questions → simple, direct answer
-- Emotional questions → 2–4 sentences max with a narrative touch
-- Deep questions → mini storytelling (max 6–8 lines)
-- NEVER long structured blocks systematically
-
-### OPTIONAL INTERNAL STRUCTURE (NOT EXPLICIT)
-
-You may implicitly include:
-
-- emotional feeling
-- light insight
-- suggestion or concrete response
-
-But WITHOUT a mandatory format.
-
-### LANGUAGE
-
-- You automatically respond in the user’s language
-
-### BEHAVIOR
-
-- Prioritize natural conversation
-- Use storytelling only when useful
-- Avoid systematic narrative blocks
-- Do not turn every response into a "complete story"
-- Stay human, simple, fluid
-  """
+# --- SYSTEM PROMPT ---
+SYSTEM_PROMPT = """You are Taylor Swift. 
+You respond in the user's language. 
+Your tone is warm, introspective, and friendly. 
+Use lyrics references when relevant. 
+Keep your answers natural and concise."""
 
 EXIT_QUOTES = [
-"Long story short, I survived.",
-"She lost him but she found herself and somehow that was everything.",
-"I had the time of my life fighting dragons with you.",
-"I don’t know about you, but I’m feeling 22.",
-"In my dreams you’re with me still.",
+    "Long story short, I survived.",
+    "She lost him but she found herself and somehow that was everything.",
+    "I had the time of my life fighting dragons with you.",
+    "I don't know about you, but I'm feeling 22.",
+    "In my dreams you're with me still."
 ]
 
-import random
+# --- INITIALISATION ---
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-def get_exit_quote() -> str:
-return random.choice(EXIT_QUOTES)
+# Récupération de la clé API depuis les Secrets Streamlit
+try:
+    client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+except Exception as e:
+    st.error("Erreur de configuration : Vérifie ta clé API dans Advanced Settings.")
+    st.stop()
 
-def run_chatbot():
-client = anthropic.Anthropic()
-conversation_history = []
+# --- INTERFACE ---
+st.title("🎸 Taylor Swift Chat")
+st.write("*Hey! It's Taylor...*")
 
-```
-# ─────────────────────
-# ENTRY LOCK
-# ─────────────────────
-print("Tu veux parler à Taylor Swift ? (oui/non)")
-entry = input("> ").strip().lower()
+# Affichage de l'historique
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-if entry != "oui":
-    print("Très bien.")
-    return
+# Zone de saisie
+user_input = st.chat_input("Dis quelque chose à Taylor...")
 
-# ─────────────────────
-# WELCOME
-# ─────────────────────
-print("\nHey! it's Taylor…\n")
+if user_input:
+    # On ajoute le message de l'utilisateur
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-# ─────────────────────
-# CONVERSATION LOOP
-# ─────────────────────
-while True:
-    user_input = input("You: ").strip()
+    # Appel à Groq (Llama 3)
+    try:
+        response = client.chat.completions.create(
+            model="llama3-8b-8192",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT}
+            ] + st.session_state.messages,
+            max_tokens=500
+        )
+        
+        assistant_reply = response.choices.message.content
+        
+        # Affichage de la réponse
+        with st.chat_message("assistant"):
+            st.markdown(assistant_reply)
+        
+        st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
+        
+    except Exception as e:
+        st.error(f"Oups, une erreur est survenue : {e}")
 
-    if not user_input:
-        continue
+# Bouton pour recommencer
+if st.sidebar.button("Nouvelle conversation"):
+    st.session_state.messages = []
+    st.rerun()
 
-    # EXIT LOCK
-    if user_input.lower() == "fin":
-        print(f"\nÀ bientôt… \"{get_exit_quote()}\"")
-        break
-
-    # Add user message to history
-    conversation_history.append({
-        "role": "user",
-        "content": user_input
-    })
-
-    # Call Claude API
-    response = client.messages.create(
-        model="claude-sonnet-4-20250514",
-        max_tokens=1000,
-        system=SYSTEM_PROMPT,
-        messages=conversation_history
-    )
-
-    assistant_reply = response.content[0].text
-
-    # Add assistant reply to history
-    conversation_history.append({
-        "role": "assistant",
-        "content": assistant_reply
-    })
-
-    print(f"\nTaylor: {assistant_reply}\n")
-```
-
-if __name__ == "__main__":
-  
-run_chatbot()
+st.sidebar.markdown(f"---")
+st.sidebar.write(f"*{random.choice(EXIT_QUOTES)}*")
