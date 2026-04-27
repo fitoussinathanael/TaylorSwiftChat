@@ -36,20 +36,18 @@ if user_input:
         st.markdown(user_input)
 
     try:
-        # Appel à l'IA
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.messages
         )
-        
-        # LA LIGNE CORRECTE (avec)
-        assistant_reply = response.choices.message.content
-        
+
+        assistant_reply = response.choices[0].message.content
+
         with st.chat_message("assistant"):
             st.markdown(assistant_reply)
-        
+
         st.session_state.messages.append({"role": "assistant", "content": assistant_reply})
-        
+
     except Exception as e:
         st.error(f"Erreur : {e}")
 
