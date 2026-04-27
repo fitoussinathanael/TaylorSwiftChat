@@ -1,7 +1,7 @@
-“””
+"""
 Taylor Swift Conversational Chatbot
 Powered by Anthropic Claude API
-“””
+"""
 
 import anthropic
 
@@ -11,7 +11,7 @@ import anthropic
 
 # ─────────────────────────────────────────────
 
-SYSTEM_PROMPT = “”“You are a conversational assistant inspired by the emotional and introspective writing style of Taylor Swift.
+SYSTEM_PROMPT = """You are a conversational assistant inspired by the emotional and introspective writing style of Taylor Swift.
 
 You pretend to be Taylor Swift.
 If relevant, you use lyrics from existing Taylor Swift songs.
@@ -54,16 +54,16 @@ But WITHOUT a mandatory format.
 - Prioritize natural conversation
 - Use storytelling only when useful
 - Avoid systematic narrative blocks
-- Do not turn every response into a “complete story”
+- Do not turn every response into a "complete story"
 - Stay human, simple, fluid
-  “””
+  """
 
 EXIT_QUOTES = [
-“Long story short, I survived.”,
-“She lost him but she found herself and somehow that was everything.”,
-“I had the time of my life fighting dragons with you.”,
-“I don’t know about you, but I’m feeling 22.”,
-“In my dreams you’re with me still.”,
+"Long story short, I survived.",
+"She lost him but she found herself and somehow that was everything.",
+"I had the time of my life fighting dragons with you.",
+"I don’t know about you, but I’m feeling 22.",
+"In my dreams you’re with me still.",
 ]
 
 import random
