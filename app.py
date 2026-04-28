@@ -87,8 +87,10 @@ CONTEXTE ICU (BASE STRUCTURÉE):
 QUESTION CLINIQUE:
 {user_input}
 
-IMPORTANT:
-Utilise uniquement le contexte ICU ci-dessus.
+IMPORTANT ABSOLU :
+Tu dois utiliser le CONTEXTE ICU fourni comme source UNIQUE.
+Si une information n’est pas dans ce contexte → répondre "non documenté dans la base ICU".
+Ne pas utiliser de connaissances externes.
 Si absent → répondre "non documenté dans la base ICU".
 """}
             ]
