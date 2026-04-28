@@ -101,18 +101,37 @@ if user_input:
         # -----------------------------
         response = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": f"""
-MODE: {mode}
+        messages=[
+    {"role": "system", "content": SYSTEM_PROMPT},
+    {"role": "user", "content": f"""
+TU ES EN MODE EXTRACTION STRICTE.
 
-CONTEXTE ICU :
+RÈGLE ABSOLUE :
+Tu ne peux utiliser QUE les informations ci-dessous.
+
+Si une info n'est pas présente → écris "non documenté dans la base ICU"
+
+-------------------------
+CONTEXTE ICU (SOURCE UNIQUE AUTORISÉE)
+-------------------------
 {context}
+-------------------------
 
-QUESTION:
+FORMAT OBLIGATOIRE :
+
+Analyse clinique :
+-
+
+Surveillance :
+-
+
+Points de vigilance :
+-
+
+QUESTION :
 {user_input}
 """}
-            ]
+]    
         )
 
         answer = response.choices[0].message.content
