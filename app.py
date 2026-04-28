@@ -113,8 +113,12 @@ if user_input:
                 {"role": "user", "content": f"""
 MODE: {mode}
 
-CONTEXTE ICU:
+CONTEXTE ICU (DONNÉES BRUTES - NE PAS REFORMULER) :
+
 {context}
+
+INSTRUCTION :
+Copie exactement les champs du contexte ICU sans reformulation.
 
 QUESTION:
 {user_input}
