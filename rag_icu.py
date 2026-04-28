@@ -2,7 +2,6 @@
 # BASE ICU (V2)
 # -----------------------------
 ICU_DATABASE = {
-
     "midazolam": {
         "classe": "benzodiazépine",
         "usage": "sédation ICU, agitation, intubation",
@@ -93,7 +92,7 @@ ICU_DATABASE = {
 }
 
 # -----------------------------
-# SYNONYMES / ABLÉVIATIONS
+# SYNONYMES
 # -----------------------------
 ALIASES = {
     "nora": "noradrenaline",
@@ -112,7 +111,7 @@ ALIASES = {
 }
 
 # -----------------------------
-# SEARCH ENGINE ROBUSTE
+# SEARCH ICU ROBUSTE
 # -----------------------------
 def search_icu(query: str) -> str:
 
@@ -121,9 +120,7 @@ def search_icu(query: str) -> str:
 
     q = query.lower().strip().replace(" ", "")
 
-    # -----------------------------
-    # NORMALISATION SYNONYMES
-    # -----------------------------
+    # normalisation alias
     for alias, real in ALIASES.items():
         if alias in q:
             q = q.replace(alias, real)
@@ -134,11 +131,10 @@ def search_icu(query: str) -> str:
 
         drug_key = drug.lower().replace(" ", "")
 
-        # MATCH ROBUSTE
+        # MATCH STABLE
         if (
             drug_key in q
             or q in drug_key
-            or drug_key[:5] in q
         ):
             results.append(f"""
 MÉDICAMENT : {drug}
