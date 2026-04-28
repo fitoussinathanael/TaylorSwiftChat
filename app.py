@@ -52,17 +52,36 @@ if user_input:
     # -----------------------------
     if mode == "BASIC":
 
-        if context is not None:
+    if context is not None:
 
-            answer = f"""
+        usage = context.get("usage", "non documenté dans la base ICU")
+        surveillance = context.get("surveillance", "non documenté dans la base ICU")
+        points = context.get("points_icu", "non documenté dans la base ICU")
+
+        answer = f"""
 Analyse clinique :
-- {context['usage']}
+- {usage}
 
 Surveillance :
-- {context['surveillance']}
+- {surveillance}
 
 Points de vigilance :
-- {context['points_icu']}
+- {points}
+
+FIN : Cette analyse est une aide à la décision et ne remplace pas un professionnel de santé.
+"""
+
+    else:
+
+        answer = """
+Analyse clinique :
+- non documenté dans la base ICU
+
+Surveillance :
+- non documenté dans la base ICU
+
+Points de vigilance :
+- non documenté dans la base ICU
 
 FIN : Cette analyse est une aide à la décision et ne remplace pas un professionnel de santé.
 """
