@@ -73,31 +73,47 @@ def compute_risk(text):
     score = 0
     reasons = []
 
+    # 🔴 contrôle fiscal
     if "contrôle fiscal" in text:
         score += 30
         reasons.append("Contrôle fiscal engagé")
 
+    # 🔴 incohérence bancaire
     if "incohérence" in text or "bancaire" in text:
         score += 25
         reasons.append("Incohérence revenus / flux bancaires")
 
+    # 🔴 revenus non déclarés (CRITIQUE)
+    if "pas déclaré" in text or "pas tout déclaré" in text:
+        score += 30
+        reasons.append("Suspicion de revenus non déclarés")
+
+    # 🔴 mélange comptes (ULTRA IMPORTANT)
+    if "compte personnel" in text:
+        score += 20
+        reasons.append("Mélange compte personnel / professionnel")
+
+    # 🟠 TVA
     if "tva" in text:
         score += 15
         reasons.append("Risque TVA")
 
+    # 🟠 justificatifs
     if "justificatif" in text:
         score += 10
         reasons.append("Demande de justificatifs")
 
+    # 🔴 redressement
     if "redressement" in text:
         score += 20
         reasons.append("Risque de redressement")
 
     score = min(score, 100)
 
-    if score > 60:
+    # niveau
+    if score > 70:
         level = "HIGH"
-    elif score > 30:
+    elif score > 40:
         level = "MEDIUM"
     else:
         level = "LOW"
