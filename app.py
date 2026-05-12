@@ -739,4 +739,4 @@ elif mode == "👥 Clients":
 
                         if dossier:
                             st.write(
-                                f"📁 {dossier['analysis']['type']}"
+                                f"📁 {dossier['analysis']['type']}")
